@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Form</title>
+    <script>
+        function removeDiacritics(input) {
+            var diacriticsMap = [
+                'à', 'á', 'ả', 'ã', 'ạ', 'ă', 'ằ', 'ắ', 'ẳ', 'ẵ', 'ặ',
+                'â', 'ầ', 'ấ', 'ẩ', 'ẫ', 'ậ', 'è', 'é', 'ẻ', 'ẽ', 'ẹ',
+                'ê', 'ề', 'ế', 'ể', 'ễ', 'ệ', 'ì', 'í', 'ỉ', 'ĩ', 'ị',
+                'ò', 'ó', 'ỏ', 'õ', 'ọ', 'ô', 'ồ', 'ố', 'ổ', 'ỗ', 'ộ',
+                'ơ', 'ờ', 'ớ', 'ở', 'ỡ', 'ợ', 'ù', 'ú', 'ủ', 'ũ', 'ụ',
+                'ư', 'ừ', 'ứ', 'ử', 'ữ', 'ự', 'ỳ', 'ý', 'ỷ', 'ỹ', 'ỵ', 'đ', ' '
+            ];
+
+            var noDiacriticsMap = [
+                'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a',
+                'a', 'a', 'a', 'a', 'a', 'e', 'e', 'e', 'e', 'e', 'e',
+                'e', 'e', 'e', 'e', 'e', 'i', 'i', 'i', 'i', 'i', 'o',
+                'o', 'o', 'o', 'o', 'o', 'o', 'o', 'o', 'o', 'o', 'o',
+                'o', 'o', 'o', 'o', 'o', 'u', 'u', 'u', 'u', 'u', 'u',
+                'u', 'u', 'u', 'u', 'u', 'u', 'y', 'y', 'y', 'y', 'y', 'd', ''
+            ];
+
+            for (var i = 0; i < diacriticsMap.length; i++) {
+                var regex = new RegExp(diacriticsMap[i], 'g');
+
+                input = input.replace(regex, noDiacriticsMap[i]);
+            }
+
+
+
+
+            return input;
+        }
+
+        function restrictInputToNoDiacritics(element) {
+            element.addEventListener('input', function () {
+                var currentValue = element.value;
+                console.log("🚀 ~ currentValue:", currentValue)
+                var convertedValue = removeDiacritics(currentValue);
+                console.log("🚀 ~ convertedValue:", convertedValue)
+                element.value = convertedValue;
+            });
+        }
+    </script>
+</head>
+
+<body>
+
+    <form>
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" onfocus="restrictInputToNoDiacritics(this)">
+
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" onfocus="restrictInputToNoDiacritics(this)">
+
+        <input type="submit" value="Login">
+    </form>
+
+</body>
+
+</html>
