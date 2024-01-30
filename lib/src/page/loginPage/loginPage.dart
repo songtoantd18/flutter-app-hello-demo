@@ -182,7 +182,7 @@ class _LoginPageState extends State<LoginPage> {
                   minimumSize: Size(80, 40),
                 ),
                 onPressed: () {},
-                child: Text('notification'),
+                child: Text('notificat 2 2 2 2 2 2 2ion'),
               ),
             ],
           ),
