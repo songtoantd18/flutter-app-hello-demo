@@ -8,6 +8,7 @@ import '../../constants/data.dart';
 import '../../function/loginFunction.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import '../locationPage/locationPage.dart';
+
 import '../notificationPage/notificationPage.dart';
 
 class LoginPage extends StatefulWidget {
@@ -181,7 +182,9 @@ class _LoginPageState extends State<LoginPage> {
                   onPrimary: Colors.white,
                   minimumSize: Size(80, 40),
                 ),
-                onPressed: () {},
+                onPressed: () {
+                  NotificationService.showNotification();
+                },
                 child: Text('notification'),
               ),
             ],
