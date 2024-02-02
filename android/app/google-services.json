@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "250268513780",
-    "project_id": "notification-flutter-37a10",
-    "storage_bucket": "notification-flutter-37a10.appspot.com"
+    "project_number": "876378556064",
+    "project_id": "noti2-40208",
+    "storage_bucket": "noti2-40208.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:250268513780:android:452a766562ea2053bff5a1",
+        "mobilesdk_app_id": "1:876378556064:android:47bfd16c8788304b3cebc5",
         "android_client_info": {
           "package_name": "com.example.app_hello"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyA86f39rk7s2UkrFqRxRaMQuZm59iJEURw"
+          "current_key": "AIzaSyDBt3Wwvfn41VLGo36NhWi6o6-JIcRF0HE"
         }
       ],
       "services": {

@@ -1,22 +1,27 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'src/page/loginPage/loginPage.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:app_hello/home_page.dart';
 
-void main() {
-  runApp(MyApp());
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  //initialize firebase from firebase core plugin
+  await Firebase.initializeApp();
+  runApp(MyApp(homeScreen: HomePage()));
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
+  final Widget? homeScreen;
+  MyApp({this.homeScreen});
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Login App',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: LoginPage(),
-      builder: EasyLoading.init(),
+      home: this.widget.homeScreen,
     );
   }
 }
