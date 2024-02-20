@@ -33,11 +33,20 @@ class HomePage extends StatefulWidget {
   _HomePageState createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   @override
   void initState() {
-    init();
     super.initState();
+    WidgetsBinding.instance!
+        .addObserver(this); // Đăng ký lắng nghe sự kiện trạng thái của ứng dụng
+    init();
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance!
+        .removeObserver(this); // Hủy đăng ký lắng nghe khi trang bị hủy
+    super.dispose();
   }
 
   init() async {
@@ -71,13 +80,34 @@ class _HomePageState extends State<HomePage> {
 
     FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
-    // Rest of your initialization code
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      // Xử lý thông báo khi ứng dụng đang ở trạng thái foreground
+      String? title = message.notification!.title;
+      String? description = message.notification!.body;
+
+      Alert(
+        context: context,
+        type: AlertType.error,
+        title: title,
+        desc: description,
+        buttons: [
+          DialogButton(
+            child: Text(
+              "COOL",
+              style: TextStyle(color: Colors.white, fontSize: 20),
+            ),
+            onPressed: () => Navigator.pop(context),
+            width: 120,
+          )
+        ],
+      ).show();
+    });
   }
 
   Future<void> _firebaseMessagingBackgroundHandler(
       RemoteMessage message) async {
-    print("Handling a background message: ${message.messageId}");
-    // Handle the background message here
+    print(
+        "---------------------Handling a background message: ${message.messageId}");
   }
 
   @override
@@ -121,5 +151,12 @@ class _HomePageState extends State<HomePage> {
     String? deviceToken = await _firebaseMessage.getToken();
 
     return (deviceToken == null) ? "" : deviceToken;
+  }
+
+  // Hàm được gọi khi trạng thái của ứng dụng thay đổi
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    print('trạng thái của app-----------------------------: $state');
+    // In ra trạng thái mới của ứng dụng
   }
 }
