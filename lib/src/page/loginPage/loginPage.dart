@@ -9,8 +9,6 @@ import '../../function/loginFunction.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import '../locationPage/locationPage.dart';
 
-import '../notificationPage/notificationPage.dart';
-
 class LoginPage extends StatefulWidget {
   @override
   _LoginPageState createState() => _LoginPageState();
@@ -176,17 +174,6 @@ class _LoginPageState extends State<LoginPage> {
                 child: Text('location'),
               ),
               SizedBox(height: 16.0),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  primary: Colors.lightGreen,
-                  onPrimary: Colors.white,
-                  minimumSize: Size(80, 40),
-                ),
-                onPressed: () {
-                  NotificationService.showNotification();
-                },
-                child: Text('notification'),
-              ),
             ],
           ),
         ),

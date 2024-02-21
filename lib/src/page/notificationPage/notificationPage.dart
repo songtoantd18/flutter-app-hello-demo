@@ -1,50 +1,102 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
+import '../loginPage/loginPage.dart';
 
-class NotificationService {
-  static FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-      FlutterLocalNotificationsPlugin();
+class NotificationPage extends StatefulWidget {
+  const NotificationPage({Key? key}) : super(key: key);
 
-  static Future<void> initializeNotifications() async {
-    var initializationSettingsAndroid =
-        AndroidInitializationSettings('flutter_logo');
-    var initializationSettingsIOS = DarwinInitializationSettings(
-      requestAlertPermission: false,
-      requestBadgePermission: false,
-      requestSoundPermission: false,
-    );
-    var initializationSettings = InitializationSettings(
-      android: initializationSettingsAndroid,
-      iOS: initializationSettingsIOS,
-    );
-    await flutterLocalNotificationsPlugin.initialize(
-      initializationSettings,
+  @override
+  _NotificationPageState createState() => _NotificationPageState();
+}
+
+class _NotificationPageState extends State<NotificationPage>
+    with WidgetsBindingObserver {
+  late String _deviceToken;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance!.addObserver(this);
+    _initializeFirebase();
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance!.removeObserver(this);
+    super.dispose();
+  }
+
+  Future<void> _initializeFirebase() async {
+    await _requestPermissionAndDeviceToken();
+    _setupFirebaseMessaging();
+  }
+
+  Future<void> _requestPermissionAndDeviceToken() async {
+    await FirebaseMessaging.instance.requestPermission();
+    _deviceToken = await FirebaseMessaging.instance.getToken() ?? "";
+    print("Device Token: $_deviceToken");
+  }
+
+  void _setupFirebaseMessaging() {
+    FirebaseMessaging.onMessageOpenedApp.listen(_handleMessageOpenedApp);
+    FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+    FirebaseMessaging.onMessage.listen(_handleMessage);
+  }
+
+  void _handleMessageOpenedApp(RemoteMessage remoteMessage) {
+    _showNotificationAlert(remoteMessage.notification);
+  }
+
+  void _handleMessage(RemoteMessage message) {
+    _showNotificationAlert(message.notification);
+  }
+
+  Future<void> _firebaseMessagingBackgroundHandler(
+      RemoteMessage message) async {
+    print("Handling a background message: ${message.messageId}");
+  }
+
+  void _showNotificationAlert(RemoteNotification? notification) {
+    String? title = notification?.title;
+    String? description = notification?.body;
+
+    Alert(
+      context: context,
+      type: AlertType.error,
+      title: title ?? "Notification",
+      desc: description,
+      buttons: [
+        DialogButton(
+          child: Text(
+            "COOL",
+            style: TextStyle(color: Colors.white, fontSize: 20),
+          ),
+          onPressed: () => Navigator.pop(context),
+          width: 120,
+        )
+      ],
+    ).show();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Container(
+              height: MediaQuery.of(context).size.height,
+              child: LoginPage(),
+            )
+          ],
+        ),
+      ),
     );
   }
 
-  static Future<void> showNotification() async {
-    var androidPlatformChannelSpecifics = AndroidNotificationDetails(
-      'your_channel_id',
-      'your_channel_name',
-      channelDescription: 'descreptoion channel',
-      importance: Importance.max,
-      priority: Priority.high,
-      playSound: true,
-      enableVibration: true,
-      visibility: NotificationVisibility.public,
-      styleInformation: DefaultStyleInformation(true, true),
-    );
-    var iOSPlatformChannelSpecifics = DarwinNotificationDetails();
-    var platformChannelSpecifics = NotificationDetails(
-      android: androidPlatformChannelSpecifics,
-      iOS: iOSPlatformChannelSpecifics,
-    );
-    await flutterLocalNotificationsPlugin.show(
-      0,
-      'Hello, there!',
-      'This is a local notification',
-      platformChannelSpecifics,
-      payload: 'item x',
-    );
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    print('App state: $state');
   }
 }
